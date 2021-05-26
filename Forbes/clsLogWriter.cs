@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
 
@@ -13,8 +14,8 @@ public static class LogWriter
         m_exePath = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
         try
         {
-            using (StreamWriter w = File.AppendText(m_exePath + "\\" + "log.txt"))
-            {
+            using (StreamWriter w = File.AppendText(m_exePath + "\\" + "log" + DateTime.Now.ToString("yyyyMMdd") + ".txt"))
+                {
                 Log(logMessage, w);
             }
         }
@@ -22,6 +23,12 @@ public static class LogWriter
         {
         }
     }
+        public static void LogWrite(Dictionary<string, object> dic)
+        {
+            using (StreamWriter w = File.AppendText(m_exePath + "\\" + "log" + DateTime.Now.ToString("yyyyMMdd") + ".txt"))
+                foreach (var entry in dic)
+                    w.WriteLine("[{0}: {1}]", entry.Key, entry.Value);
+        }
 
     public static void Log(string logMessage, TextWriter txtWriter)
     {
@@ -29,8 +36,7 @@ public static class LogWriter
         {
             txtWriter.Write("\r\nLog Entry : ");
             txtWriter.WriteLine("{0} {1}", DateTime.Now.ToLongTimeString(),
-                DateTime.Now.ToLongDateString());
-            txtWriter.WriteLine("  :");
+                DateTime.Now.ToLongDateString());           
             txtWriter.WriteLine("  :{0}", logMessage);
             txtWriter.WriteLine("-------------------------------");
         }

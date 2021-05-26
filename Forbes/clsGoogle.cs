@@ -9,26 +9,45 @@ using Google.Apis.Bigquery.v2.Data;
 using Google.Apis.Services;
 using Google.Cloud.BigQuery.V2;
 using System.Security.Cryptography.X509Certificates;
+using System.Configuration;
 
 namespace Forbes
 {
     class clsGoogle
     {
+       
+        /*
         String ApplicationName = "api-project";                        // GB Application Name?
         public String ProjectID = "api-project-901373404215";                 // GB Project ID
         String DataSet = "meritb2b";          // GB DataSet ID
-        String TableName = "api-project-901373404215:meritb2b.data";   // GB Table ID
+        String TableName = "data";   // GB Table ID
 
         // Refer To https://developers.google.com/bigquery/authorization#service-accounts-server
         String serviceAccountEmail = "meritb2b@api-project-901373404215.iam.gserviceaccount.com";
         string PrivateKeyFileName = @"C:\\Users\\jbarash\\source\\repos\\Forbes\\api-project-901373404215-e19e68f0f225.p12";
         string PrivateKeyPassword = "notasecret";
+        */
+
+        String ApplicationName = String.Empty;
+        public String ProjectID = String.Empty;
+        String DataSet = String.Empty;
+        String TableName = String.Empty;
+        String serviceAccountEmail = String.Empty;
+        string PrivateKeyFileName = String.Empty;
+        string PrivateKeyPassword = String.Empty;
         X509Certificate2 certificate;
         public BigqueryService service;
         public BigQueryClient client;
 
 
         public clsGoogle() {
+            ApplicationName = ConfigurationManager.AppSettings["ApplicationName"];
+            ProjectID =  ConfigurationManager.AppSettings["ProjectID"];
+            DataSet = ConfigurationManager.AppSettings["DataSet"];
+            PrivateKeyFileName = ConfigurationManager.AppSettings["KeyFile"];
+            PrivateKeyPassword = ConfigurationManager.AppSettings["KeyPassword"];
+            serviceAccountEmail = ConfigurationManager.AppSettings["serviceAccountEmail"];
+
             certificate = new X509Certificate2(PrivateKeyFileName, PrivateKeyPassword, X509KeyStorageFlags.Exportable);
             ServiceAccountCredential credential = new ServiceAccountCredential(
                new ServiceAccountCredential.Initializer(serviceAccountEmail)
